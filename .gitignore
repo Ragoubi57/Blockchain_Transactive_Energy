@@ -1,0 +1,9 @@
+*/node_modlules/*
+frontend/node_modules/*
+backend/node_modules/*
+.env
+.DS_Store
+.vscode/
+dist/
+logs/
+smart-contracts/node_modules/*

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  api-gateway:
+    build: ./backend/services/api-gateway
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/te-platform
+      - AI_SERVICE_URL=http://ai-service:8000
+    depends_on:
+      - mongo
+      - ai-service
+
+  ai-service:
+    build: ./backend/services/ai-service
+    ports:
+      - "8000:8000"
+
+volumes:
+  mongo-data:
