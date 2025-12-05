@@ -56,3 +56,4 @@ npm run dev
 - **Blockchain**: Ethereum/Energy Web Chain (Solidity)
 - **AI**: Python (TensorFlow/Scikit-learn) for consumption forecasting.
 - **IoT**: Real-time data ingestion pipeline.
+

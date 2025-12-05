@@ -4,10 +4,12 @@ import { ethers } from 'ethers';
 import Marketplace from '../components/Marketplace';
 import Dashboard from '../components/Dashboard';
 import Wallet from '../components/Wallet';
+import Chatbot from '../components/Chatbot';
+import GridMap from '../components/GridMap';
 
 export default function Home() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [view, setView] = useState<'marketplace' | 'dashboard' | 'wallet'>('dashboard');
+  const [view, setView] = useState<'marketplace' | 'dashboard' | 'wallet' | 'grid'>('dashboard');
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -95,15 +97,27 @@ export default function Home() {
               >
                 Wallet
               </button>
+              <button 
+                onClick={() => setView('grid')}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all duration-200 ${
+                  view === 'grid' 
+                    ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-sm' 
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                }`}
+              >
+                Grid Map
+              </button>
             </div>
 
             {/* View Content */}
             {view === 'marketplace' && <Marketplace walletAddress={walletAddress} />}
             {view === 'dashboard' && <Dashboard />}
             {view === 'wallet' && <Wallet walletAddress={walletAddress} />}
+            {view === 'grid' && <GridMap />}
           </>
         )}
       </div>
+      <Chatbot />
     </main>
   )
 }

@@ -47,11 +47,45 @@ router.get('/energy-data/:userId', async (req, res) => {
 // AI Service Proxy
 router.post('/predict', async (req, res) => {
   try {
+    // Try to fetch real data from MongoDB for the demo
+    // We'll pick the first user we find to simulate a logged-in session
+    let historicalData = [];
+    try {
+        const user = await User.findOne();
+        if (user) {
+            // Get last 30 days of data (approx 720 hours)
+            const energyData = await EnergyData.find({ userId: user._id })
+                .sort({ timestamp: 1 }) // Ascending for time series
+                .limit(720); 
+            
+            if (energyData.length > 0) {
+                // Map to [consumption, production, temperature, voltage, frequency]
+                historicalData = energyData.map(d => [
+                    d.consumption, 
+                    d.production,
+                    d.temperature || 20, // Default if missing
+                    d.voltage || 230,
+                    d.frequency || 50
+                ]);
+                console.log(`Fetched ${historicalData.length} data points from MongoDB for user ${user.username}`);
+            }
+        }
+    } catch (dbErr) {
+        console.warn("MongoDB fetch failed (using synthetic fallback):", dbErr.message);
+    }
+
     const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://ai-service:8000';
+    
+    // Merge historical data into request body
+    const requestBody = {
+        ...req.body,
+        historical_data: historicalData
+    };
+
     const response = await fetch(`${aiServiceUrl}/predict/consumption`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(requestBody)
     });
     
     if (!response.ok) {

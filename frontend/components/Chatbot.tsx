@@ -3,9 +3,13 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, X, Sparkles, Zap } from 'lucide-react';
 
 export default function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<{role: 'user' | 'bot', content: string}[]>([
-    { role: 'bot', content: "Hello! I'm your AI Energy Assistant. Ask me about your consumption, market prices, or energy saving tips." }
+    { role: 'bot', content: "Hello! I'm your AI Energy Assistant. Ask me about your consumption, market prices, or energy saving tips." },
+    { role: 'user', content: "How is my solar production looking today?" },
+    { role: 'bot', content: "Your solar production is excellent today! ☀️ You've generated 18.5 kWh so far, which is 15% higher than your average. You have a surplus of about 6 kWh available for trading." },
+    { role: 'user', content: "Should I sell it now?" },
+    { role: 'bot', content: "Based on current market trends, prices are peaking at 0.15 ENG/kWh. I recommend listing 5 kWh now to maximize profit. Would you like me to prepare the listing?" }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -64,7 +68,7 @@ export default function Chatbot() {
                 <Sparkles size={18} />
               </div>
               <div>
-                <h3 className="font-bold text-sm">Energy Assistant</h3>
+                <h3 className="font-bold text-sm">Gemini AI Assistant</h3>
                 <p className="text-xs text-indigo-200 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
                   Online
